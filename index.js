@@ -70,7 +70,14 @@ async function run() {
         });
 
         app.get('/allToys', async (req, res) => {
-            const result = await toysCollection.find().toArray();
+            const result = await toysCollection.find().limit(20).toArray();
+            res.send(result);
+        });
+
+        app.get('/allToys/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await toysCollection.findOne(query);
             res.send(result);
         });
 
