@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -23,11 +23,50 @@ async function run() {
         await client.connect();
 
         const galleryCollection = client.db('khelnaGari').collection('gallery');
+        const remoteControlCarsCollection = client.db('khelnaGari').collection('category1');
+        const constructionAndBuildingCarsCollection = client.db('khelnaGari').collection('category2');
+        const transformingCarsCollection = client.db('khelnaGari').collection('category3');
 
         app.get('/gallery', async (req, res) => {
             const result = await galleryCollection.find().toArray();
             res.send(result);
-        })
+        });
+
+        app.get('/category1', async (req, res) => {
+            const result = await remoteControlCarsCollection.find().toArray();
+            res.send(result);
+        });
+
+        app.get('/category1/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await remoteControlCarsCollection.findOne(query);
+            res.send(result);
+        });
+
+        app.get('/category2', async (req, res) => {
+            const result = await constructionAndBuildingCarsCollection.find().toArray();
+            res.send(result);
+        });
+
+        app.get('/category2/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await constructionAndBuildingCarsCollection.findOne(query);
+            res.send(result);
+        });
+
+        app.get('/category3', async (req, res) => {
+            const result = await transformingCarsCollection.find().toArray();
+            res.send(result);
+        });
+
+        app.get('/category3/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await transformingCarsCollection.findOne(query);
+            res.send(result);
+        });
 
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
