@@ -82,6 +82,9 @@ async function run() {
                 query = { email: req.query.email };
             }
             const result = await toysCollection.find(query).limit(20).toArray();
+            // ascending and descending sorting
+            // const result = await toysCollection.find(query).sort({ toyPrice: 1 }).limit(20).toArray();
+            // const result = await toysCollection.find(query).sort({ toyPrice: -1 }).limit(20).toArray();
             res.send(result);
         });
 
