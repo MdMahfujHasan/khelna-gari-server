@@ -69,11 +69,6 @@ async function run() {
             res.send(result);
         });
 
-        app.get('/allToys', async (req, res) => {
-            const result = await toysCollection.find().limit(20).toArray();
-            res.send(result);
-        });
-
         app.get('/allToys/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
@@ -86,7 +81,7 @@ async function run() {
             if (req.query?.email) {
                 query = { email: req.query.email };
             }
-            const result = await toysCollection.find(query).toArray();
+            const result = await toysCollection.find(query).limit(20).toArray();
             res.send(result);
         });
 
@@ -96,12 +91,33 @@ async function run() {
             res.send(result);
         });
 
+        app.patch('/allToys/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedToy = req.body;
+            const updates = {
+                $set: {
+                    toyName: updatedToy.toyName,
+                    sellerName: updatedToy.sellerName,
+                    toyPrice: updatedToy.toyPrice,
+                    quantity: updatedToy.quantity,
+                    photoURL: updatedToy.photoURL,
+                    subCategory: updatedToy.subCategory,
+                    description: updatedToy.description,
+                    email: updatedToy.email,
+                    rating: updatedToy.rating
+                },
+            };
+            const result = await toysCollection.updateOne(filter, updates);
+            res.send(result);
+        });
+
         app.delete('/allToys/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await toysCollection.deleteOne(query);
             res.send(result);
-        })
+        });
 
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
