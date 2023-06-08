@@ -81,11 +81,27 @@ async function run() {
             res.send(result);
         });
 
+        app.get('/allToys', async (req, res) => {
+            let query = {};
+            if (req.query?.email) {
+                query = { email: req.query.email };
+            }
+            const result = await toysCollection.find(query).toArray();
+            res.send(result);
+        });
+
         app.post('/allToys', async (req, res) => {
             const newToy = req.body;
             const result = await toysCollection.insertOne(newToy);
             res.send(result);
         });
+
+        app.delete('/allToys/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await toysCollection.deleteOne(query);
+            res.send(result);
+        })
 
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
