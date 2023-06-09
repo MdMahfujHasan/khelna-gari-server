@@ -96,7 +96,7 @@ async function run() {
 
         app.patch('/allToys/:id', async (req, res) => {
             const id = req.params.id;
-            const filter = { _id: new ObjectId(id) };
+            const query = { _id: new ObjectId(id) };
             const updatedToy = req.body;
             const updates = {
                 $set: {
@@ -111,7 +111,7 @@ async function run() {
                     rating: updatedToy.rating
                 },
             };
-            const result = await toysCollection.updateOne(filter, updates);
+            const result = await toysCollection.updateOne(query, updates);
             res.send(result);
         });
 
