@@ -27,6 +27,7 @@ async function run() {
         const constructionAndBuildingCarsCollection = client.db('khelnaGari').collection('category2');
         const transformingCarsCollection = client.db('khelnaGari').collection('category3');
         const toysCollection = client.db('khelnaGari').collection('allToys');
+        const testimonialsCollection = client.db('khelnaGari').collection('testimonials');
 
         app.get('/gallery', async (req, res) => {
             const result = await galleryCollection.find().toArray();
@@ -119,6 +120,11 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await toysCollection.deleteOne(query);
+            res.send(result);
+        });
+
+        app.get('/testimonials', async (req, res) => {
+            const result = await testimonialsCollection.find().toArray();
             res.send(result);
         });
 
